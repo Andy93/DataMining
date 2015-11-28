@@ -1,6 +1,5 @@
 package missingValues;
 
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,8 +19,6 @@ public class missingValues {
 		String line = "";
 		String cvsSplitBy = ",";
 		String GLOBAL_CONSTANT = "N";
-		String GLOBAL_CONSTANTB = "N/A";
-		
 		try {
 
 			reader = new BufferedReader(new FileReader(csvFile));
@@ -51,12 +48,7 @@ public class missingValues {
 				x.append(",");
 				x.append(routes[7]);
 				x.append(",");
-				if (routes[8].equals("")){
-					routes[8] = GLOBAL_CONSTANTB;
-					x.append(routes[8]);
-				}else{
-					x.append(routes[8]);
-				}
+				x.append(routes[8]);
 				x.append("\n");
 				writer.write(x.toString());
 			    writer.flush();
