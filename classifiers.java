@@ -18,7 +18,7 @@ public class Classifiers {
 		BufferedReader reader = null;
 		String line = "";
 		String cvsSplitBy = ",";
-		double median = (780 - 189)/2;
+		double midRange = (780 + 189)/2;
 		try {
 
 			reader = new BufferedReader(new FileReader(csvFile));
@@ -39,7 +39,7 @@ public class Classifiers {
 				}
 				x.append(",");
 				Double doubleVal = Double.parseDouble(classifier[2]);
-				if(doubleVal <= median){
+				if(doubleVal <= midRange){
 					x.append("Short Flight");
 				}else{
 					x.append("Long Flight");
