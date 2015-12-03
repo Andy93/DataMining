@@ -29,7 +29,14 @@ public class Classifiers {
 				StringBuilder x = new StringBuilder();
 				x.append(classifier[0]);
 				x.append(",");
-				x.append(classifier[1]);
+				int foo = Integer.parseInt(classifier[1]);
+				if(foo <= 20){
+					x.append("<=20");
+				}else if(foo > 20){
+					x.append(">20");
+				}else{
+					x.append("No ones go!");
+				}
 				x.append(",");
 				Double doubleVal = Double.parseDouble(classifier[2]);
 				if(doubleVal <= median){
