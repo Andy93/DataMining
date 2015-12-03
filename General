@@ -1,0 +1,211 @@
+import java.io.*;
+import java.util.*;
+
+public class DataMining 
+{
+	public static void compareCSV() //Creates CSV where it can store reachable airports and who goes there.
+	{
+		String csvFile = "C:/Users/Nicholas/workspace/DataMining/src/CSV_Folder/";
+		
+		BufferedReader distanceAirports = null;
+		BufferedReader countAirports = null;
+		PrintWriter in = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		
+		try
+		{
+			countAirports = new BufferedReader(new FileReader(csvFile + "Destination_Count.csv"));
+			distanceAirports = new BufferedReader(new FileReader(csvFile + "Reachable_Airports.csv"));
+			in = new PrintWriter(csvFile + "Competator_Use_Of_Airports_In_Range.csv");
+			in.println("Airport,Number of Flights To");
+			
+			
+			HashMap<String, String> file1Map = new HashMap<String, String>();
+
+			while ((line = distanceAirports.readLine()) != null) 
+			{
+				String[] canFly = line.split(cvsSplitBy);
+				String key = canFly[0];
+				file1Map.put(key, key);
+			}
+
+			while ((line = countAirports.readLine()) != null) 
+			{
+				String[] numOf = line.split(cvsSplitBy);
+				String key = numOf[0];
+				if (file1Map.containsKey(key) && !numOf[1].equals("Number of Flights To")) 
+				{
+					in.println(numOf[0] + "," +numOf[1]);
+				}
+			}
+			in.flush();
+			in.close();
+			
+		}
+		catch(Exception e)
+		{
+			System.out.println("Could not find file");
+		}
+	}
+	public static void countAirports()
+	{
+		String csvFile = "C:/Users/Nicholas/workspace/DataMining/src/CSV_Folder/";
+		
+		
+		BufferedReader out = null;
+		PrintWriter in = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		
+		try
+		{
+			in = new PrintWriter(csvFile + "Destination_Count.csv");
+			in.println("Airport,Number of Flights To");
+			out = new BufferedReader(new FileReader(csvFile + "CityJet_Competitors.csv"));
+			List<String> list = new ArrayList<String>();
+			
+			while ((line = out.readLine()) != null) 
+			{
+				String[] flight = line.split(cvsSplitBy);
+				;
+				
+				if(!flight[4].equals("To"))
+				{
+					list.add(flight[4]);
+				}
+			}
+			Set<String> unique = new HashSet<String>(list);
+
+			for (String key : unique) 
+			{
+				in.println(key + "," + Collections.frequency(list, key));
+				
+			}
+			in.flush();
+			in.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Could not find file");
+		}
+		
+	}
+	public static void getDistance()
+	{
+		//The Coordinates from LCY, CityJets main Airport.
+		double lcylat = 51.505278;
+		double lcylon = 0.055278;
+		
+		String csvFile = "C:/Users/Nicholas/workspace/DataMining/src/CSV_Folder/";
+		
+		BufferedReader out = null;
+	
+		PrintWriter in = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		
+		try
+		{
+			out = new BufferedReader(new FileReader(csvFile + "airports.csv"));
+			
+			
+			in = new PrintWriter(csvFile + "Reachable_Airports.csv");
+			in.println("Airport,Distance");
+			
+			while ((line = out.readLine()) != null) 
+			{
+				try
+				{
+					String[] flight = line.split(cvsSplitBy);
+					if(!flight[6].equals("Latitude"))
+					{
+					
+						String lat = flight[6];
+						String lon = flight[7];
+						//Convert longs and lats from file to doubles
+						Double dlat = Double.parseDouble(lat);
+						Double dlon = Double.parseDouble(lon);
+						double distance = distFrom(lcylat, lcylon, dlat, dlon );
+						//if airport has no name or is outside CityJets max Distance and above their min. 
+						if(!flight[4].isEmpty() && distance <= 740 && distance >= 189)//740 is longest flight according to data
+						{
+							in.println(flight[4]+ ","  + distance);
+						}
+					}
+				}
+				catch(Exception e)
+				{
+					//In case of strange data that stops the code running
+					System.out.println("Problem Reading, Unknown origin");
+					continue;
+				}
+			}
+			in.flush();
+			in.close();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Could not find file");
+		}
+	}
+
+	//formula for distance between Long and Lat.
+	public static double distFrom(double lat1, double lng1, double lat2, double lng2) 
+	{
+	    double earthRadius = 3958.75; // miles (or 6371.0 kilometers)
+	    double dLat = Math.toRadians(lat2-lat1);
+	    double dLng = Math.toRadians(lng2-lng1);
+	    double sindLat = Math.sin(dLat / 2);
+	    double sindLng = Math.sin(dLng / 2);
+	    double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2) * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	    double dist = earthRadius * c;
+
+	    return dist;
+	} 
+	
+	public static double mean(double[] m) {
+	    double sum = 0;
+	    for (int i = 0; i < m.length; i++) {
+	        sum += m[i];
+	    }
+	    return sum / m.length;
+	}
+
+	// the array double[] m MUST BE SORTED
+	public static double median(double[] m) {
+	    int middle = m.length/2;
+	    if (m.length%2 == 1) {
+	        return m[middle];
+	    } else {
+	        return (m[middle-1] + m[middle]) / 2.0;
+	    }
+	}
+
+	public static int mode(int a[]) {
+	    int maxValue = 0;
+	    int maxCount = 0;
+
+	    for (int i = 0; i < a.length; ++i) {
+	        int count = 0;
+	        for (int j = 0; j < a.length; ++j) {
+	            if (a[j] == a[i]) ++count;
+	        }
+	        if (count > maxCount) 
+	        {
+	            maxCount = count;
+	            maxValue = a[i];
+	        }
+	    }
+
+	    return maxValue;
+	}
+	
+	public static void main(String [] args)
+	{
+		countAirports();
+		getDistance();
+		compareCSV();
+	}
+}
