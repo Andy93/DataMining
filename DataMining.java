@@ -11,6 +11,7 @@ public class DataMining
 		
 		BufferedReader distanceAirports = null;
 		BufferedReader countAirports = null;
+		BufferedReader cityJet = null;
 		PrintWriter in = null;
 		String line = "";
 		String cvsSplitBy = ",";
@@ -19,35 +20,73 @@ public class DataMining
 		{
 			countAirports = new BufferedReader(new FileReader(csvFile + "Destination_Count.csv"));
 			distanceAirports = new BufferedReader(new FileReader(csvFile + "Reachable_Airports.csv"));
+			cityJet = new BufferedReader(new FileReader(csvFile + "CityJet.csv"));
 			in = new PrintWriter(csvFile + "Competator_Use_Of_Airports_In_Range.csv");
-			in.println("Airport,Number of Flights To");
+			//in.println("Airport,Number of Flights To,Distance,Do City Jet go here");
 			
 			
 			HashMap<String, String> file1Map = new HashMap<String, String>();
-
+			HashMap<String, String> file2Map = new HashMap<String, String>();
+			HashMap<String, String> file3Map = new HashMap<String, String>();
+			
+			while ((line = cityJet.readLine()) != null) 
+			{
+				String[] numOf = line.split(cvsSplitBy);
+		
+				file3Map.put(numOf[2], numOf[5]);
+				
+			}
+			
 			while ((line = distanceAirports.readLine()) != null) 
 			{
 				String[] canFly = line.split(cvsSplitBy);
-				String key = canFly[0];
-				file1Map.put(key, key);
+				String airport = canFly[0];
+				String distance = canFly[1];
+				file1Map.put(airport, distance);
 			}
-
+			distanceAirports = new BufferedReader(new FileReader(csvFile + "Reachable_Airports.csv"));
 			while ((line = countAirports.readLine()) != null) 
 			{
 				String[] numOf = line.split(cvsSplitBy);
 				String key = numOf[0];
+				
+				
 				if (file1Map.containsKey(key) && !numOf[1].equals("Number of Flights To")) 
 				{
-					in.println(numOf[0] + "," +numOf[1]);
+					if(file3Map.containsKey(numOf[0]))
+					{
+						
+						in.println(numOf[0] + "," +numOf[1] + "," + file1Map.get(key) + ",Y");
+					}
+						
+					else in.println(numOf[0] + "," +numOf[1] + "," + file1Map.get(key) + ",N");
+					file2Map.put(numOf[0], numOf[1]);
 				}
 			}
+			
+			while ((line = distanceAirports.readLine()) != null) 
+			{
+				String[] numOf = line.split(cvsSplitBy);
+				String key = numOf[0];
+				
+				if (!file2Map.containsKey(key) && !numOf[0].equals("Airport")) 
+				{
+					if(file3Map.containsKey(numOf[0]))
+					{
+						in.println(numOf[0] + ",0" + "," + numOf[1] + ",Y");
+					}
+					else in.println(numOf[0] + ",0" + "," + numOf[1] + ",N");
+				}
+			}
+			
+			
 			in.flush();
 			in.close();
 			
 		}
 		catch(Exception e)
 		{
-			System.out.println("Could not find file");
+			System.out.println("Could not find file1");
 		}
 	}
 	public static void countAirports()
@@ -244,8 +283,8 @@ public class DataMining
 				writer.write(x.toString());
 			    writer.flush();
 			    
-				System.out.println("Route [Airline = " + routes[0] 
-	                                 + " , Airline ID=" + routes[1] + "" + " , Source Airport =" + routes[2] + "" + " , Source Airport ID =" + routes[3] + "" + " , Destination Airport =" + routes[4] + "" + " , Destination Airport ID =" + routes[5] + ""+ " , Codeshare =" + routes[6] + ""+ " , Stops =" + routes[7] + ""+ " , Equipment =" + routes[8] + "]");
+				//System.out.println("Route [Airline = " + routes[0] 
+	                                // + " , Airline ID=" + routes[1] + "" + " , Source Airport =" + routes[2] + "" + " , Source Airport ID =" + routes[3] + "" + " , Destination Airport =" + routes[4] + "" + " , Destination Airport ID =" + routes[5] + ""+ " , Codeshare =" + routes[6] + ""+ " , Stops =" + routes[7] + ""+ " , Equipment =" + routes[8] + "]");
 			}
 			writer.close();
 		} catch (FileNotFoundException e) {
@@ -271,6 +310,7 @@ public class DataMining
 		String line = "";
 		String cvsSplitBy = ",";
 		double midRange = (780 + 189)/2;
+		//String lineToRemove = "Airport,Number of Flights To,Distance,Do City Jet go here";
 		try {
 
 			reader = new BufferedReader(new FileReader(csvFile));
@@ -370,17 +410,138 @@ public class DataMining
 		}
 		System.out.println("Done");
 	  }
-	
+	public void runCompetitors() {
+		String csvFile = "/Users/Andrew/Desktop/DataMining/src/fixedRoutes.csv";
+		String csvFile2 = "/Users/Andrew/Desktop/DataMining/src/CityJet_Competitors.csv";
+		BufferedReader reader = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		try {
+
+			reader = new BufferedReader(new FileReader(csvFile));
+			PrintWriter writer = new PrintWriter(csvFile2);
+			int BAcount =0;
+			int EIcount =0;
+			int FRcount =0;
+			int U2count =0;
+			while ((line = reader.readLine()) != null) {
+
+			    // use comma as separator
+				String[] Merging = line.split(cvsSplitBy);
+				StringBuilder x = new StringBuilder();
+				if(Merging[0].equals("EI")){
+					x.append(Merging[0]);
+					x.append(",");
+					x.append(Merging[1]);
+					x.append(",");
+					x.append(Merging[2]);
+					x.append(",");
+					x.append(Merging[3]);
+					x.append(",");
+					x.append(Merging[4]);
+					x.append(",");
+					x.append(Merging[6]);
+					x.append(",");
+					x.append(Merging[7]);
+					x.append(",");
+					x.append(Merging[8]);
+					x.append("\n");
+					EIcount++;
+				}else if(Merging[0].equals("FR")){
+					x.append(Merging[0]);
+					x.append(",");
+					x.append(Merging[1]);
+					x.append(",");
+					x.append(Merging[2]);
+					x.append(",");
+					x.append(Merging[3]);
+					x.append(",");
+					x.append(Merging[4]);
+					x.append(",");
+					x.append(Merging[6]);
+					x.append(",");
+					x.append(Merging[7]);
+					x.append(",");
+					x.append(Merging[8]);
+					x.append("\n");
+					FRcount++;
+				}else if(Merging[0].equals("BA")){
+					x.append(Merging[0]);
+					x.append(",");
+					x.append(Merging[1]);
+					x.append(",");
+					x.append(Merging[2]);
+					x.append(",");
+					x.append(Merging[3]);
+					x.append(",");
+					x.append(Merging[4]);
+					x.append(",");
+					x.append(Merging[6]);
+					x.append(",");
+					x.append(Merging[7]);
+					x.append(",");
+					x.append(Merging[8]);
+					x.append("\n");
+					BAcount++;
+				}else if(Merging[0].equals("U2")){
+					x.append(Merging[0]);
+					x.append(",");
+					x.append(Merging[1]);
+					x.append(",");
+					x.append(Merging[2]);
+					x.append(",");
+					x.append(Merging[3]);
+					x.append(",");
+					x.append(Merging[4]);
+					x.append(",");
+					x.append(Merging[6]);
+					x.append(",");
+					x.append(Merging[7]);
+					x.append(",");
+					x.append(Merging[8]);
+					x.append("\n");
+					U2count++;
+				}
+				writer.write(x.toString());
+			    writer.flush();
+			    
+				//System.out.println("AIRLINE [Airline = " + Merging[0] + " , Airline ID=" + Merging[1] +" , Source Airport=" + Merging[2] + " , Source Airport ID=" + Merging[3]+" , Destination Airport=" + Merging[4]+ " , Destination Airport ID=" + Merging[5]+" , Codeshare=" + Merging[6] + " , Stops=" + Merging[7] + " , Equipement=" + Merging[8] + "]");
+				
+				
+			}
+			System.out.println("BA count:" + BAcount);
+			System.out.println("FR count:" + FRcount);
+			System.out.println("EI count:" + EIcount);
+			System.out.println("U2 count:" + U2count);
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		System.out.println("Done");
+	  }
 	public static void main(String [] args)
 	{
 		DataMining w = new DataMining();
 		w.run();
+		DataMining wz = new DataMining();
+		wz.runCompetitors();
 		countAirports();
 		getDistance();
+		compareCSV();
 		DataMining x = new DataMining();
 		x.run2();
-		compareCSV();
 		DataMining y = new DataMining();
-		y.run2();
+		y.run3();
+
 	}
 }
