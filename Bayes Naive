@@ -1,0 +1,148 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+public class BayesNaive {
+	public static double getPercent(double i, double j)
+	{
+		return (i/j * 100)/100; // divide by 100 to move the decimal place
+	}
+	public static double makeTrainedSet(String s, String st, int i, int j, boolean b)
+	{
+		String csvFile = "C:/Users/Nicholas/workspace/DataMining/src/CSV_Folder/";
+		
+		BufferedReader out = null;
+	
+		String line = "";
+		String cvsSplitBy = ",";
+		double countAmount = 0;
+		double countLines = 0;
+		double count = 0;
+		try
+		{
+			out = new BufferedReader(new FileReader(csvFile + "classifier.csv"));
+			
+			while ((line = out.readLine()) != null) 
+			{
+				String columns[] = line.split(cvsSplitBy);
+				
+				if(columns[i].equals(s))
+				{
+					count++;
+					if(columns[j].equals(st))
+					{
+						countAmount++;
+					}
+				}
+				countLines++;
+		
+			}
+					
+			//System.out.println(s + "= " + count + "/" + countLines);
+		}	
+		catch(Exception e)
+		{
+				System.out.println("Could not find file");
+		}
+		
+		if(b == true)//If it's true get percent for amount with specific yes or no value
+		{	
+			return getPercent(countAmount,count);
+		}
+		else return getPercent(count,countLines); //if false you want just how many N vs Y's there are
+		
+	}
+	
+	public static String trainData()
+	{
+		double d = 0.0;
+		String finalResult = "";
+		double first = makeTrainedSet("Y", "", 3, 0, false);
+		double Long = makeTrainedSet("Y", "Long Flight", 3, 2, true);
+		double Short = makeTrainedSet("Y", "Short Flight", 3, 2, true);
+		double NoOne = makeTrainedSet("Y", "No one goes!", 3, 1, true);
+		double Less = makeTrainedSet("Y", "<=20", 3, 1, true);
+		double More = makeTrainedSet("Y", ">20", 3, 1, true);
+			
+		double firstNo = makeTrainedSet("N", "", 3, 0, false);
+		double LongNo = makeTrainedSet("N", "Long Flight", 3, 2, true);
+		double ShortNo = makeTrainedSet("N", "Short Flight", 3, 2, true);
+		double NoOneNo = makeTrainedSet("N", "No one goes!", 3, 1, true);
+		double LessNo = makeTrainedSet("N", "<=20", 3, 1, true);
+		double MoreNo = makeTrainedSet("N", ">20", 3, 1, true);
+		
+		if((first * Long * NoOne) >= (firstNo * LongNo * NoOneNo))
+		{
+	
+			d = (first * Long * NoOne) - (firstNo * LongNo * NoOneNo);
+			//System.out.println(String.format("%.5g%n",d));
+		}	
+		
+		
+		if((first * Long * Less) >= (firstNo * LongNo * LessNo))
+		{
+			String sResult = ("<=20,Long Flight,?");
+			double result = (first * Long * Less) - (firstNo * LongNo * LessNo);
+			if(result > d)
+			{
+				d = result;
+				finalResult = sResult;
+			}
+		}	
+	
+		
+		if((first * Long * More) >= (firstNo * LongNo * MoreNo))
+		{
+			String sResult = (">20,Long Flight,?");
+			double result = (first * Long * More) - (firstNo * LongNo * MoreNo);
+			if(result > d)
+			{
+				d = result;
+				finalResult = sResult;
+				
+			}
+		}
+		
+		if((first * Short * NoOne) >= (firstNo * ShortNo * NoOneNo))
+		{
+			String sResult = ("No one goes!,Short Flight,?");
+			double result = (first * Short * NoOne) - (firstNo * ShortNo * NoOneNo);
+			if(result > d)
+			{
+				d = result;
+				finalResult = sResult;
+			}
+		}
+		
+		if((first * Short * Less) >= (firstNo * ShortNo * LessNo))
+		{
+			String sResult = ("<=20,Short Flight,?");
+			double result = (first * Short * Less) - (firstNo * ShortNo * LessNo);
+			if(result > d)
+			{
+				d = result;
+				finalResult = sResult;
+			}
+		}
+		
+		
+		if((first * Short * More) >= (firstNo * ShortNo * MoreNo))
+		{
+			String sResult = (">20,Short Flight,?");
+			double result = (first * Short * More) - (firstNo * ShortNo * MoreNo);
+			if(result > d)
+			{
+				d = result;
+				finalResult = sResult;
+			}
+		}
+		
+	
+		return finalResult;
+	
+	}
+	
+	public static void main(String [] args)
+	{
+		System.out.println(trainData());
+	}
+}
