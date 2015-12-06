@@ -504,6 +504,7 @@ public class DataMining
 		compareCSV();
 		DataMining x = new DataMining();
 		x.run2();
+		//BayesNavie.java was Run here to make prediction.
 		DataMining y = new DataMining();
 		y.run3();
 
