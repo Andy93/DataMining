@@ -5,7 +5,7 @@ import java.util.*;
 
 public class DataMining 
 {
-	public static void compareCSV() //Creates CSV where it can store reachable airports and who goes there.
+	public static void compareCSV() //Creates CSV to store the data in preperation to be trained
 	{
 		String csvFile = "C:/Users/Andrew/Desktop/DataMining/src/";
 		
@@ -25,7 +25,7 @@ public class DataMining
 			//in.println("Airport,Number of Flights To,Distance,Do City Jet go here");
 			
 			
-			HashMap<String, String> file1Map = new HashMap<String, String>();
+			HashMap<String, String> file1Map = new HashMap<String, String>(); //Creates 3 hashSets to store the 3 CSVs being compared
 			HashMap<String, String> file2Map = new HashMap<String, String>();
 			HashMap<String, String> file3Map = new HashMap<String, String>();
 			
@@ -89,7 +89,7 @@ public class DataMining
 			System.out.println("Could not find file1");
 		}
 	}
-	public static void countAirports()
+	public static void countAirports() //A simple program to count how many competitors go to each airport.
 	{
 		String csvFile = "C:/Users/Andrew/Desktop/DataMining/src/";
 		
@@ -101,7 +101,7 @@ public class DataMining
 		
 		try
 		{
-			in = new PrintWriter(csvFile + "Destination_Count.csv");
+			in = new PrintWriter(csvFile + "Destination_Count.csv"); //Values stored in new CSV
 			in.println("Airport,Number of Flights To");
 			out = new BufferedReader(new FileReader(csvFile + "CityJet_Competitors.csv"));
 			List<String> list = new ArrayList<String>();
@@ -109,18 +109,18 @@ public class DataMining
 			while ((line = out.readLine()) != null) 
 			{
 				String[] flight = line.split(cvsSplitBy);
-				;
 				
-				if(!flight[4].equals("To"))
+				
+				if(!flight[4].equals("To")) //Assures the top line is ignored
 				{
 					list.add(flight[4]);
 				}
 			}
-			Set<String> unique = new HashSet<String>(list);
+			Set<String> unique = new HashSet<String>(list); //Hashset stores values.
 
 			for (String key : unique) 
 			{
-				in.println(key + "," + Collections.frequency(list, key));
+				in.println(key + "," + Collections.frequency(list, key)); //count the values
 				
 			}
 			in.flush();
@@ -132,7 +132,7 @@ public class DataMining
 		}
 		
 	}
-	public static void getDistance()
+	public static void getDistance() //This method gets the distance to each Airport
 	{
 		//The Coordinates from LCY, CityJets main Airport.
 		double lcylat = 51.505278;
@@ -151,7 +151,7 @@ public class DataMining
 			out = new BufferedReader(new FileReader(csvFile + "airports.csv"));
 			
 			
-			in = new PrintWriter(csvFile + "Reachable_Airports.csv");
+			in = new PrintWriter(csvFile + "Reachable_Airports.csv");//creates a csv to store the airports cityJet can reach.
 			in.println("Airport,Distance");
 			
 			while ((line = out.readLine()) != null) 
@@ -162,23 +162,23 @@ public class DataMining
 					if(!flight[6].equals("Latitude"))
 					{
 					
-						String lat = flight[6];
+						String lat = flight[6]; //extracts long and lat to compare to LCY
 						String lon = flight[7];
 						//Convert longs and lats from file to doubles
 						Double dlat = Double.parseDouble(lat);
 						Double dlon = Double.parseDouble(lon);
-						double distance = distFrom(lcylat, lcylon, dlat, dlon );
+						double distance = distFrom(lcylat, lcylon, dlat, dlon ); //Applies formula.
 						//if airport has no name or is outside CityJets max Distance and above their min. 
-						if(!flight[4].isEmpty() && distance <= 740 && distance >= 189)//740 is longest flight according to data
+						if(!flight[4].isEmpty() && distance <= 740 && distance >= 189)//740 is longest flight CityJet can do
 						{
-							in.println(flight[4]+ ","  + distance);
+							in.println(flight[4]+ ","  + distance); //Stores the flights within CityJets limits
 						}
 					}
 				}
 				catch(Exception e)
 				{
 					//In case of strange data that stops the code running
-					System.out.println("Problem Reading, Unknown origin");
+					System.out.println("Problem Reading, Unknown origin"); //Certain data may slow the process so continue if code stumbles
 					continue;
 				}
 			}
@@ -205,43 +205,7 @@ public class DataMining
 
 	    return dist;
 	} 
-	
-	public static double mean(double[] m) {
-	    double sum = 0;
-	    for (int i = 0; i < m.length; i++) {
-	        sum += m[i];
-	    }
-	    return sum / m.length;
-	}
 
-	// the array double[] m MUST BE SORTED
-	public static double median(double[] m) {
-	    int middle = m.length/2;
-	    if (m.length%2 == 1) {
-	        return m[middle];
-	    } else {
-	        return (m[middle-1] + m[middle]) / 2.0;
-	    }
-	}
-
-	public static int mode(int a[]) {
-	    int maxValue = 0;
-	    int maxCount = 0;
-
-	    for (int i = 0; i < a.length; ++i) {
-	        int count = 0;
-	        for (int j = 0; j < a.length; ++j) {
-	            if (a[j] == a[i]) ++count;
-	        }
-	        if (count > maxCount) 
-	        {
-	            maxCount = count;
-	            maxValue = a[i];
-	        }
-	    }
-
-	    return maxValue;
-	}
 	public void run() {
 		String csvFile = "C:/Users/Andrew/Desktop/DataMining/src/routes.csv";
 		String csvFile2 = "C:/Users/Andrew/Desktop/DataMining/src/fixedRoutes.csv";
