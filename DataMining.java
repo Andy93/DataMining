@@ -247,8 +247,7 @@ public class DataMining
 				writer.write(x.toString());
 			    writer.flush();
 			    
-				//System.out.println("Route [Airline = " + routes[0] 
-	                                // + " , Airline ID=" + routes[1] + "" + " , Source Airport =" + routes[2] + "" + " , Source Airport ID =" + routes[3] + "" + " , Destination Airport =" + routes[4] + "" + " , Destination Airport ID =" + routes[5] + ""+ " , Codeshare =" + routes[6] + ""+ " , Stops =" + routes[7] + ""+ " , Equipment =" + routes[8] + "]");
+			
 			}
 			writer.close();
 		} catch (FileNotFoundException e) {
@@ -274,7 +273,7 @@ public class DataMining
 		String line = "";
 		String cvsSplitBy = ",";
 		double midRange = (780 + 189)/2;
-		//String lineToRemove = "Airport,Number of Flights To,Distance,Do City Jet go here";
+		
 		try {
 
 			reader = new BufferedReader(new FileReader(csvFile));
@@ -469,7 +468,7 @@ public class DataMining
 				writer.write(x.toString());
 			    writer.flush();
 			    
-				//System.out.println("AIRLINE [Airline = " + Merging[0] + " , Airline ID=" + Merging[1] +" , Source Airport=" + Merging[2] + " , Source Airport ID=" + Merging[3]+" , Destination Airport=" + Merging[4]+ " , Destination Airport ID=" + Merging[5]+" , Codeshare=" + Merging[6] + " , Stops=" + Merging[7] + " , Equipement=" + Merging[8] + "]");
+			
 				
 				
 			}
