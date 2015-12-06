@@ -146,6 +146,7 @@ public class BayesNaive
 	
 	public static void main(String [] args)
 	{
-		System.out.println(trainData());
+		System.out.println(trainData()); 
+		//prints the result of the best case scenrio. This scenario is applied in our DataMining.java code.
 	}
 }
