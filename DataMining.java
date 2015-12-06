@@ -206,7 +206,7 @@ public class DataMining
 	    return dist;
 	} 
 
-	public void run() {
+	public void run() { //fills in the missing Values for Data Cleaning
 		String csvFile = "C:/Users/Andrew/Desktop/DataMining/src/routes.csv";
 		String csvFile2 = "C:/Users/Andrew/Desktop/DataMining/src/fixedRoutes.csv";
 		BufferedReader reader = null;
@@ -267,7 +267,7 @@ public class DataMining
 		System.out.println("Done");
 	}
 	
-	public void run2() {
+	public void run2() { // takes in the competitors usage of airports and returns airports to be used in the classifier
 		String csvFile = "/Users/Andrew/Desktop/DataMining/src/Competator_Use_Of_Airports_In_Range.csv";
 		String csvFile2 = "/Users/Andrew/Desktop/DataMining/src/classifier.csv";
 		BufferedReader reader = null;
@@ -330,7 +330,7 @@ public class DataMining
 		System.out.println("Done");
 	}
 	
-	public void run3() {
+	public void run3() { // uses the classifier airports to return a list of prediction airports
 		String csvFile1 = "/Users/Andrew/Desktop/DataMining/src/classifier.csv";
 		String csvFile2 = "/Users/Andrew/Desktop/DataMining/src/Prediction.csv";
 		BufferedReader reader = null;
@@ -374,7 +374,7 @@ public class DataMining
 		}
 		System.out.println("Done");
 	  }
-	public void runCompetitors() {
+	public void runCompetitors() { // takes from the file of routes and supplies back a csv of selected competitor airlines of CityJet
 		String csvFile = "/Users/Andrew/Desktop/DataMining/src/fixedRoutes.csv";
 		String csvFile2 = "/Users/Andrew/Desktop/DataMining/src/CityJet_Competitors.csv";
 		BufferedReader reader = null;
