@@ -9,7 +9,7 @@ public class BayesNaive
 	}
 	public static double makeTrainedSet(String s, String st, int i, int j, boolean b)
 	{
-		String csvFile = "C:/Users/Nicholas/workspace/DataMining/src/CSV_Folder/";
+		String csvFile = "C:/Users/Andrew/Desktop/DataMining/src/";
 		
 		BufferedReader out = null;
 	
